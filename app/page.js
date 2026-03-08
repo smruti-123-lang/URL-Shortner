@@ -1,18 +1,25 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <nav className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto">
-        <div className="flex justify-between items-center">
-          <div className="text-xl font-bold">My App</div>
-          <div className="flex space-x-4">
-            <a href="/" className="hover:text-gray-300">Home</a>
-            <a href="/about" className="hover:text-gray-300">About</a>
-            <a href="/contact" className="hover:text-gray-300">Contact</a>
-          </div>
+    <main className="bg-purple-100">
+      <section className="grid grid-cols-2 h-[50vh]">
+        <div className=" flex flex-col justify-center items-centre gap-5 p-15 m-3">
+          <p className="font-bold text-3xl text-center">The Best URL Shortener....</p>
+          <p className="text-1xl text-center">We are the Best In the Market. We understand your needs..We are Easy to use...</p>
+          <p className='flex gap-3 justify-center'>
+                <Link href ="/Shorten"><button className='bg-purple-900 rounded-lg shadow-lg p-3 py-2 font-bold text-white'>Try Now</button></Link>
+                <Link href ="/github"><button className='bg-purple-900 rounded-lg shadow-lg p-3 py-2 font-bold text-white'>Github</button></Link>
+
+            </p>
         </div>
-      </div>
-    </nav>
+        <div className=" flex justify-start relative">
+          <Image className="mix-blend-darken" alt =" Image of an vector" src="/vector2.jpg"   fill={true}></Image>
+
+        </div>
+
+      </section>
+    </main>
   );
 }
