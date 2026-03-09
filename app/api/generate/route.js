@@ -1,30 +1,50 @@
 import clientPromise from "@/lib/mongodb";
 
 export async function POST(request) {
-
+  try {
     const body = await request.json();
-    const client = await clientPromise;
+    const { url, shorturl } = body;
 
+    if (!url || !shorturl) {
+      return new Response(JSON.stringify({
+        message: "URL and short URL are required",
+        success: false,
+        error: true
+      }), { status: 400 });
+    }
+
+    const client = await clientPromise;
     const db = client.db("bitlinks");
     const collection = db.collection("links");
 
-    // check if shorturl exists
-    const doc = await collection.findOne({ shorturl: body.shorturl });
-    if (doc) {
-        return Response.json({
-            message: "Short URL already exists",
-            success: false,
-            error: true
-        });
+    // Check if short URL already exists
+    const existing = await collection.findOne({ shorturl });
+    if (existing) {
+      return new Response(JSON.stringify({
+        message: "Short URL already exists",
+        success: false,
+        error: true
+      }), { status: 409 });
     }
-    const result = await collection.insertOne({
-        url: body.url,
-        shorturl: body.shorturl
+
+    // Insert new short URL
+    await collection.insertOne({
+      url,
+      shorturl,
+      createdAt: new Date()
     });
 
-    return Response.json({
-        message: "finished",
-        success: true,
-        error: false
-    });
+    return new Response(JSON.stringify({
+      message: "Short URL generated successfully",
+      success: true,
+      error: false
+    }), { status: 200 });
+  } catch (err) {
+    console.error("API Error:", err);
+    return new Response(JSON.stringify({
+      message: "Internal server error",
+      success: false,
+      error: true
+    }), { status: 500 });
+  }
 }
